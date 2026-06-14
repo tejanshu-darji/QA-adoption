@@ -563,5 +563,47 @@ li{margin-bottom:6px}
 		</section>
 	</div>
 </main>
+<script>
+(function () {
+	const blockMessage = 'Right click and developer shortcuts are disabled on this page.';
+	const block = function (event) {
+		event.preventDefault();
+		return false;
+	};
+
+	document.addEventListener('contextmenu', block);
+	document.addEventListener('keydown', function (event) {
+		const key = String(event.key || '').toLowerCase();
+		if (key === 'f12') {
+			block(event);
+			return;
+		}
+
+		if (event.ctrlKey && event.shiftKey && ['i', 'j', 'c'].includes(key)) {
+			block(event);
+			return;
+		}
+
+		if (event.ctrlKey && key === 'u') {
+			block(event);
+			return;
+		}
+
+		if (event.metaKey && event.altKey && ['i', 'j', 'c'].includes(key)) {
+			block(event);
+		}
+	});
+
+	document.addEventListener('copy', function (event) {
+		event.preventDefault();
+	});
+
+	document.addEventListener('contextmenu', function () {
+		if (window.console && typeof window.console.warn === 'function') {
+			window.console.warn(blockMessage);
+		}
+	}, { once: true });
+})();
+</script>
 </body>
 </html>
