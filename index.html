@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Adoption Guide & Usage Standards for QA Teams</title>
+<style>
+:root{
+	--bg:#f5f7fb;
+	--panel:#ffffff;
+	--text:#1f2937;
+	--muted:#5b6577;
+	--line:#dbe3ef;
+	--primary:#1d4ed8;
+	--accent:#f59e0b;
+	--danger:#b91c1c;
+	--shadow:0 12px 30px rgba(15,23,42,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+	margin:0;
+	font-family:"Segoe UI",Arial,sans-serif;
+	background:
+		radial-gradient(circle at top left, rgba(29,78,216,.08), transparent 28%),
+		radial-gradient(circle at top right, rgba(124,58,237,.08), transparent 24%),
+		var(--bg);
+	color:var(--text);
+	line-height:1.6;
+}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+header.hero{
+	background:linear-gradient(135deg,#102a66 0%,#1d4ed8 45%,#7c3aed 100%);
+	color:#fff;
+	padding:48px 20px 34px;
+	box-shadow:0 10px 30px rgba(15,23,42,.18);
+}
+.hero-inner,.shell{max-width:1480px;margin:0 auto}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(290px,.9fr);gap:24px;align-items:end}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(2.2rem,4vw,4rem);line-height:1.02;margin:14px 0 12px}
+.hero p{max-width:920px;color:rgba(255,255,255,.88);font-size:1.02rem}
+.hero-pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.pill,.badge{display:inline-flex;align-items:center;gap:8px;border-radius:999px;font-size:12px;font-weight:700}
+.pill{padding:8px 12px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.16);color:#fff}
+.badge{padding:4px 10px;background:#dbeafe;color:#1e40af}
+.hero-card{background:rgba(255,255,255,.14);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:20px;box-shadow:0 18px 40px rgba(15,23,42,.16)}
+.hero-card h3{margin-bottom:8px}
+.hero-card ul{margin:10px 0 0;padding-left:18px;color:rgba(255,255,255,.9)}
+.hero-card li{margin-bottom:8px}
+main{padding:24px 20px 44px}
+.layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:22px;align-items:start}
+.layout > section{display:flex;flex-direction:column}
+.layout > section > .card{width:100%}
+
+#section-1{order:8}
+#section-2{order:1}
+#section-3{order:13}
+#section-4{order:9}
+#section-5{order:6}
+#section-7{order:2}
+#section-8{order:3}
+#section-9{order:4}
+#section-10{order:5}
+#section-11{order:11}
+#section-12{order:7}
+#section-13{order:10}
+#section-14{order:12}
+#section-15{order:14}
+
+aside.toc{position:sticky;top:18px}
+.toc-card,.card{background:var(--panel);border:1px solid rgba(219,227,239,.9);border-radius:18px;box-shadow:var(--shadow)}
+.toc-card{padding:18px}
+.toc-card h3{font-size:1rem;margin-bottom:8px}
+.toc-card a{display:block;padding:10px 12px;border-radius:12px;color:var(--text);font-weight:600}
+.toc-card a:hover{background:#eff6ff;text-decoration:none}
+.card{padding:24px;margin-bottom:18px}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.section-title h2{margin:0;font-size:1.45rem;color:#0f172a}
+.section-title span{color:var(--muted);font-size:.95rem}
+.overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.metric{background:linear-gradient(180deg,#fff,#f8fbff);border:1px solid var(--line);border-radius:16px;padding:18px}
+.metric strong{display:block;font-size:1.5rem;color:#0f172a;margin-bottom:2px}
+.metric small{color:var(--muted)}
+table{width:100%;border-collapse:collapse;margin:14px 0 0}
+th,td{border:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+th{background:#e0e7ff;color:#1e3a8a}
+tr:nth-child(even) td{background:#fbfdff}
+.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.thirds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.usecase{border-left:5px solid var(--primary);padding:14px 14px 14px 16px;background:#fbfdff;border-radius:14px;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:12px}
+.usecase h3{margin-bottom:6px;font-size:1.03rem}
+.usecase p{margin-bottom:6px;color:var(--muted)}
+.golden-box,.danger-box{border-radius:14px;padding:16px 18px;margin:16px 0;border:1px solid var(--line)}
+.golden-box{background:#fffbeb;border-left:5px solid var(--accent)}
+.danger-box{background:#fef2f2;border-left:5px solid #ef4444}
+pre{background:#0f172a;color:#e2e8f0;padding:18px;border-radius:16px;overflow:auto;border:1px solid #1e293b;font-size:.92rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:700}
+.callout-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.callout{background:#f8fafc;border:1px solid var(--line);border-radius:16px;padding:18px}
+.callout h3{margin-bottom:8px}
+.footer-links{display:flex;flex-wrap:wrap;gap:10px}
+.footer-links a{display:inline-flex;align-items:center;padding:9px 12px;border-radius:999px;background:#eef2ff;color:#1e3a8a;font-weight:700}
+ul{padding-left:20px}
+li{margin-bottom:6px}
+.small{color:var(--muted);font-size:.95rem}
+.workflow-step{background:#f8fafc;padding:12px;border-radius:10px;margin:8px 0;border-left:3px solid #7c3aed}
+.common-mistakes{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+@media (max-width:1100px){
+	.layout{grid-template-columns:1fr}
+	aside.toc{position:static}
+	.overview-grid,.split,.thirds,.callout-grid,.hero-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="hero" id="top">
+	<div class="hero-inner">
+		<div class="hero-grid">
+			<div>
+				<div class="eyebrow">QA Team Adoption Guide</div>
+				<h1>Claude Adoption Guide & Usage Standards</h1>
+				<p>Complete guide for the internal QA team.</p>
+				<div class="hero-pills">
+					<span class="pill">Full-content version</span>
+					<span class="pill">GitHub Pages ready</span>
+					<span class="pill">Sticky section navigation</span>
+					<span class="pill">QA and automation focus</span>
+				</div>
+			</div>
+			<div class="hero-card">
+				<h3>Quick read</h3>
+				<ul>
+					<li>Use Claude in the right workspace.</li>
+					<li>Choose the correct interface for the task.</li>
+					<li>Keep sessions scoped and verify work before merging.</li>
+					<li>Use MCP, plan mode, and subagents deliberately.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</header>
+
+<main>
+	<div class="shell layout">
+		<aside class="toc">
+			<div class="toc-card">
+				<h3>On this page</h3>
+				<a href="#section-2">1. Access Methods</a>
+				<a href="#section-7">2. Manual QA Use Cases</a>
+				<a href="#section-8">3. Automation QA Use Cases</a>
+				<a href="#section-9">4. Co-Work Use Cases</a>
+				<a href="#section-10">5. Routines And Schedule Use Cases</a>
+				<a href="#section-5">6. Best Practices For Access Types</a>
+				<a href="#section-12">7. QA Life-Cycle Workflows</a>
+				<a href="#section-1">8. Core Team Rules</a>
+				<a href="#section-4">9. Workspace Initial Setup & Environment Configuration</a>
+				<a href="#section-13">10. First-Day Quick Start</a>
+				<a href="#section-11">11. Project Structures</a>
+				<a href="#section-14">12. Security, Governance & Compliance Mandates</a>
+				<a href="#section-3">13. Do's and Don't</a>
+				<a href="#section-15">14. Learning Resources</a>
+			</div>
+		</aside>
+
+		<section>
+			<div class="card" id="section-1">
+				<div class="section-title"><h2>8. Core Team Rules</h2><span>Onboarding requirements and working standards</span></div>
+				<p>This section defines the onboarding requirements, daily working standards, and usage practices for team members using Claude across Simform engineering projects.</p>
+				<table>
+					<tr><th>Rule</th><th>Expected Practice</th></tr>
+					<tr><td><b>Use Claude in the right workspace</b></td><td>Use Claude Code in VS Code when project privacy and project-specific context must be preserved.</td></tr>
+					<tr><td><b>Isolate projects</b></td><td>Create a separate local folder for each project so context does not carry across projects.</td></tr>
+					<tr><td><b>Stay within scope</b></td><td>Work only within your assigned project folder and do not modify files from unrelated projects.</td></tr>
+					<tr><td><b>Use project-scoped MCP configuration</b></td><td>Use local MCP configuration for project-specific tools and avoid global connector setup when it could expose cross-project data.</td></tr>
+					<tr><td><b>Keep MCP personal</b></td><td>Maintain a personal MCP configuration file within your own project folder and do not share it.</td></tr>
+					<tr><td><b>Retain useful history</b></td><td>Save important Claude chats locally within the relevant project folder for future reference.</td></tr>
+				</table>
+			</div>
+
+			<div class="card" id="section-2">
+				<div class="section-title"><h2>1. Access Methods</h2><span>Best fit and avoid cases</span></div>
+				<table>
+					<tr><th>Interface</th><th>Best For</th><th>Avoid For</th></tr>
+					<tr><td>Claude Web</td><td>Requirement analysis, Test design, Planning, Documentation</td><td>Large repository modifications</td></tr>
+					<tr><td>Claude Desktop</td><td>Logs, Screenshots, RCA, Evidence analysis</td><td>Framework-wide automation development</td></tr>
+					<tr><td>Claude Projects</td><td>Long-running QA initiatives and releases</td><td>One-off questions</td></tr>
+					<tr><td>Claude Code / CLI</td><td>Automation development, repository analysis, CI/CD investigation, framework refactoring, bulk code changes</td><td>Requirement discussions and stakeholder documentation</td></tr>
+					<tr><td>VS Code Extension</td><td>Small automation updates and debugging</td><td>Large architecture redesigns</td></tr>
+					<tr><td>MCP</td><td>Jira, GitHub, Confluence, Slack integrations</td><td>Standalone analysis</td></tr>
+					<tr><td>Claude Co-Work</td><td>Collaborative QA discussions and planning</td><td>Repository coding tasks</td></tr>
+				</table>
+			</div>
+
+			<div class="card" id="section-3">
+				<div class="section-title"><h2>13. Do's and Don't</h2><span>Operational habits that keep sessions focused</span></div>
+				<table>
+					<tr><th style="background:#dcfce7;color:#15803d;width:50%">Do</th><th style="background:#ffeeee;color:#b91c1c;width:50%">Don't</th></tr>
+					<tr>
+						<td>
+							<ul>
+								<li>Use plan mode for any non-trivial task before asking Claude to make changes.</li>
+								<li>Keep one task per prompt so the session stays focused and the output stays accurate.</li>
+								<li>Watch context usage and start a fresh session or compact the conversation when the session gets too large.</li>
+								<li>Use clear prompts with file names, expected behavior, and acceptance criteria whenever possible.</li>
+								<li>Give Claude a way to verify its work, such as tests, expected outputs, or validation steps.</li>
+								<li>Use subagents for investigation or exploration tasks so the main session stays clean.</li>
+								<li>Keep your project instructions concise and relevant so important guidance does not get buried.</li>
+								<li>Enable only the MCP tools or connectors that are needed for the current project.</li>
+								<li>Save important outputs, decisions, and chats inside the project folder for future reference.</li>
+								<li>Review the suggested changes before applying them to confirm they match the intended scope.</li>
+							</ul>
+						</td>
+						<td>
+							<ul>
+								<li>Do not keep unrelated work in the same session for too long.</li>
+								<li>Do not ask Claude to handle multiple unrelated tasks in a single prompt.</li>
+								<li>Do not switch models in the middle of an active session unless there is a strong reason to restart the work.</li>
+								<li>Do not add or enable new MCP connectors mid-session unless it is necessary and approved.</li>
+								<li>Do not create an oversized project instruction file with information Claude can already infer from codebase.</li>
+								<li>Do not paste large raw logs or long command outputs into the conversation when a filtered summary will do.</li>
+								<li>Do not ask Claude to broadly explore the repository without scope when you only need a specific answer.</li>
+								<li>Do not accept changes without checking the active folder, current context, and affected files.</li>
+								<li>Do not use shared or global project configuration when local project isolation is required.</li>
+								<li>Do not modify files outside your assigned folder or project scope.</li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="card" id="section-4">
+				<div class="section-title"><h2>9. Workspace Initial Setup & Environment Configuration</h2><span>VS Code, Claude Code, and Claude Desktop setup</span></div>
+				<div class="split">
+					<div>
+						<h3>VS Code & Claude Code Setup</h3>
+						<ul>
+							<li>Install Claude Code and the required VS Code extension.</li>
+							<li>Sign in and complete the required account setup, including GitHub authentication if your workflow requires it.</li>
+							<li>Create or open your assigned local project folder before starting any Claude session.</li>
+							<li>Create your personal MCP configuration within that folder if the project uses MCP tools.</li>
+							<li>Confirm that you are working only inside the correct project folder before running prompts or accepting changes.</li>
+							<li>Store important conversations, outputs, and notes in the same project folder so project history remains together.</li>
+							<li><i>If required:</i> If a project does not use a dedicated project folder, follow a clear conversation naming format such as <code>User - ProjectName</code>.</li>
+							<li><i>If required:</i> If MCP tools are needed, add only the local or project-scoped connectors required for that work. Do not enable broad access unless approved.</li>
+						</ul>
+					</div>
+					<div>
+						<h3>Claude Desktop Setup & Context Layers</h3>
+						<ul>
+							<li>Download and install Claude Desktop from <a href="https://claude.ai/download" target="_blank" rel="noreferrer">claude.ai/download</a>, then sign in.</li>
+							<li>Create a dedicated folder for AI-related project documentation so Claude Desktop has a clear, structured context source.</li>
+						</ul>
+						<p>Claude Desktop works with three explicit layers of context that should be managed proactively:</p>
+						<ul>
+							<li><b>Layer 1: Conversation Context:</b> Everything discussed in the current chat session is retained as active context (e.g., investigating structural components).</li>
+							<li><b>Layer 2: Attached Files:</b> Files uploaded directly (architecture blueprints, trace-logs, or schemas) become immediately inspectable.</li>
+							<li><b>Layer 3: Project Knowledge:</b> Long-lived project documentation intentionally curated by the team within the workspace directory.</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="card" id="section-5">
+				<div class="section-title"><h2>6. Best Practices For Access Types</h2><span>How to use each Claude interface well</span></div>
+				<div class="thirds">
+					<div>
+						<h3>Claude Web</h3>
+						<ul>
+							<li>Upload complete requirements.</li>
+							<li>Ask for risks, gaps and edge cases together.</li>
+							<li>Use separate chats for separate features.</li>
+							<li>Use Projects for long-running initiatives.</li>
+						</ul>
+					</div>
+					<div>
+						<h3>Claude Desktop</h3>
+						<ul>
+							<li>Upload complete logs.</li>
+							<li>Include screenshots and videos.</li>
+							<li>Share expected vs actual behavior.</li>
+							<li>Provide environment information.</li>
+						</ul>
+					</div>
+					<div>
+						<h3>Claude Projects</h3>
+						<ul>
+							<li>Create separate projects per product or module.</li>
+							<li>Store testing standards and requirements.</li>
+							<li>Reuse project knowledge across releases.</li>
+							<li>Maintain dedicated regression projects.</li>
+						</ul>
+					</div>
+				</div>
+				<div class="thirds" style="margin-top:16px">
+					<div>
+						<h3>Claude Code / CLI</h3>
+						<ul>
+							<li>Analyze repository architecture before making changes.</li>
+							<li>Use repository-wide searches before refactoring.</li>
+							<li>Generate reusable automation components instead of one-off scripts.</li>
+							<li>Validate generated code using existing framework standards.</li>
+							<li>Use CLI for multi-file updates and framework migrations.</li>
+							<li>Leverage terminal access for CI/CD investigations.</li>
+							<li>Use prompts that specify coding standards and project conventions.</li>
+							<li>Review generated pull requests before merging.</li>
+						</ul>
+					</div>
+					<div>
+						<h3>VS Code Extension</h3>
+						<ul>
+							<li>Use for focused tasks.</li>
+							<li>Keep context limited to relevant files.</li>
+							<li>Switch to Claude Code for larger changes.</li>
+						</ul>
+					</div>
+					<div>
+						<h3>MCP</h3>
+						<ul>
+							<li>Use personal credentials.</li>
+							<li>Connect only required systems.</li>
+							<li>Leverage live project information.</li>
+							<li>Use for impact analysis.</li>
+						</ul>
+					</div>
+				</div>
+				<div class="thirds" style="margin-top:16px">
+					<div>
+						<h3>Claude Co-Work</h3>
+						<ul>
+							<li>Use for team discussions.</li>
+							<li>Capture decisions and actions.</li>
+							<li>Review release risks collaboratively.</li>
+							<li>Use during requirement grooming sessions.</li>
+						</ul>
+					</div>
+				</div>
+				<h3>Strategic Tool Comparison: GitHub Copilot vs. Claude</h3>
+				<table>
+					<tr><th>Area</th><th>GitHub Copilot</th><th>Claude</th></tr>
+					<tr><td><b>Primary Focus</b></td><td>Code Completion</td><td>Context-Aware Engineering Assistance</td></tr>
+					<tr><td><b>Context Source</b></td><td>Open Files + Instructions</td><td>Conversation + Project Knowledge + Files</td></tr>
+					<tr><td><b>Repository Knowledge</b></td><td>GitHub Instructions</td><td>CLAUDE.md + Project Knowledge</td></tr>
+					<tr><td><b>Prompt Reuse</b></td><td>Prompt Files</td><td>Commands and Skills</td></tr>
+					<tr><td><b>Investigation Work</b></td><td>Prompt Driven</td><td>Conversation Driven</td></tr>
+					<tr><td><b>Agent Support</b></td><td>Agent Definitions</td><td>Agents + Subagents</td></tr>
+					<tr><td><b>Tool Integration</b></td><td>Extensions</td><td>MCP Integrations</td></tr>
+					<tr><td><b>Context Persistence</b></td><td>Repository Scoped</td><td>Project Scoped</td></tr>
+					<tr><td><b>Planning Workflow</b></td><td>Optional</td><td>Strongly Recommended</td></tr>
+				</table>
+				<div class="golden-box"><strong>Key Takeaways:</strong> Use GitHub Copilot for quick code suggestions and inline development support. Use Claude for planning, debugging, investigation, documentation, and tasks that require broader project context.</div>
+			</div>
+
+			<div class="card" id="section-7">
+				<div class="section-title"><h2>2. Manual QA Use Cases</h2><span>Human testing and analysis scenarios</span></div>
+				<div class="usecase"><h3>Requirement Understanding</h3><p><b>Recommended:</b> Claude Web / Claude Projects</p><p>Input: Jira Stories, PRDs, Wireframes, Acceptance Criteria</p><p>Output: Missing requirements, risks, dependencies, clarification questions.</p></div>
+				<div class="usecase"><h3>Test Case Design</h3><p><b>Recommended:</b> Claude Web</p><p>Generate positive, negative, edge, accessibility and security scenarios.</p></div>
+				<div class="usecase"><h3>Exploratory Testing Planning</h3><p><b>Recommended:</b> Claude Web</p><p>Generate exploratory charters, risk areas and testing ideas.</p></div>
+				<div class="usecase"><h3>Requirement Gap Analysis</h3><p><b>Recommended:</b> Claude Web</p><p>Identify missing acceptance criteria, validation rules and business rules.</p></div>
+				<div class="usecase"><h3>Regression Impact Analysis</h3><p><b>Recommended:</b> Claude Web + MCP</p><p>Identify impacted modules and recommended regression scope.</p></div>
+				<div class="usecase"><h3>Production Defect Investigation</h3><p><b>Recommended:</b> Claude Desktop</p><p>Analyze logs, screenshots and stack traces.</p></div>
+				<div class="usecase"><h3>Release Validation Planning</h3><p><b>Recommended:</b> Claude Projects</p><p>Create smoke suite, sanity suite and go-live checklist.</p></div>
+				<div class="usecase"><h3>Test Plan Creation</h3><p><b>Recommended:</b> Claude Web</p><p>Create scope, risks, assumptions, entry and exit criteria.</p></div>
+				<div class="usecase"><h3>Test Summary Report Creation</h3><p><b>Recommended:</b> Claude Web</p><p>Create stakeholder-ready testing reports.</p></div>
+				<div class="usecase"><h3>Defect Triage Preparation</h3><p><b>Recommended:</b> Claude Desktop</p><p>Suggest severity, priority and root cause hypotheses.</p></div>
+			</div>
+
+			<div class="card" id="section-8">
+				<div class="section-title"><h2>3. Automation QA Use Cases</h2><span>Automation, framework, and CI use cases</span></div>
+				<div class="usecase"><h3>New Playwright Automation Development</h3><p><b>Recommended:</b> Claude Code + VS Code</p><p>Generate page objects, fixtures, tests and utilities.</p></div>
+				<div class="usecase"><h3>Existing Test Maintenance</h3><p><b>Recommended:</b> Claude Code / CLI</p><p>Generate locator updates, refactoring suggestions and framework cleanup.</p></div>
+				<div class="usecase"><h3>Playwright Framework Design</h3><p><b>Recommended:</b> Claude Code / CLI</p><p>Create folder structure, architecture, fixture strategy and reporting strategy.</p></div>
+				<div class="usecase"><h3>Flaky Test Analysis</h3><p><b>Recommended:</b> Claude Desktop + Claude Code</p><p>Analyze logs, videos, screenshots and CI failures.</p></div>
+				<div class="usecase"><h3>API Automation Development</h3><p><b>Recommended:</b> Claude Code / CLI</p><p>Create REST Assured tests, Postman tests and API utilities.</p></div>
+				<div class="usecase"><h3>Contract Testing</h3><p><b>Recommended:</b> Claude Code / CLI</p><p>Generate contract validation and schema validation checks.</p></div>
+				<div class="usecase"><h3>Negative API Testing</h3><p><b>Recommended:</b> Claude Code / CLI</p><p>Create invalid payload and boundary validation scenarios.</p></div>
+				<div class="usecase"><h3>Data Driven Testing</h3><p><b>Recommended:</b> Claude Code / CLI</p><p>Create datasets and parameterized automation tests.</p></div>
+				<div class="usecase"><h3>Framework Health Assessment</h3><p><b>Recommended:</b> Claude Code / CLI</p><p><b>Analyze:</b> Framework structure, Duplicate code, Technical debt, Reporting strategy, Fixture architecture</p><p><b>Output:</b> Improvement roadmap, Refactoring recommendations</p></div>
+				<div class="usecase"><h3>Bulk Locator Maintenance</h3><p><b>Recommended:</b> Claude Code / CLI</p><p><b>Examples:</b> Locator changes, Component renaming, Shared utility updates</p><p><b>Output:</b> Repository-wide updates, Impact analysis</p></div>
+				<div class="usecase"><h3>Automation Coverage Gap Analysis</h3><p><b>Recommended:</b> Claude Code / CLI</p><p><b>Compare:</b> Requirements, Existing tests, Automation coverage</p><p><b>Output:</b> Missing scenarios, Risk areas, Coverage matrix</p></div>
+				<div class="usecase"><h3>Pull Request Review</h3><p><b>Recommended:</b> Claude Code / CLI</p><p><b>Analyze:</b> Test reliability, Reusability, Coding standards, Performance</p><p><b>Output:</b> Review comments, Improvement suggestions</p></div>
+				<div class="usecase"><h3>Automation Framework Migration</h3><p><b>Recommended:</b> Claude Code / CLI</p><p><b>Examples:</b> Selenium → Playwright, Cypress → Playwright, REST Assured → Playwright API</p><p><b>Output:</b> Migration roadmap, Converted components, Risks and blockers</p></div>
+				<div class="usecase"><h3>Test Data Generation Utilities</h3><p><b>Recommended:</b> Claude Code / CLI</p><p><b>Output:</b> Faker utilities, Data builders, Mock generators</p></div>
+				<div class="usecase"><h3>Release Impact Analysis</h3><p><b>Recommended:</b> Claude Code / CLI + MCP</p><p><b>Analyze:</b> Commits, Pull Requests, Jira tickets</p><p><b>Output:</b> Regression scope, Impacted modules, Release risks</p></div>
+				<div class="usecase"><h3>CI/CD Failure Analysis</h3><p><b>Recommended:</b> Claude Code / CLI</p><p>Analyze failed executions, pipeline failures and environment issues.</p></div>
+			</div>
+
+			<div class="card" id="section-9">
+				<div class="section-title"><h2>4. Co-Work Use Cases</h2><span>Collaborative QA discussions and planning</span></div>
+				<div class="usecase"><h3>Daily QA Planning</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Daily task prioritization and execution planning.</p></div>
+				<div class="usecase"><h3>Release Readiness Reviews</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Release risk discussions and go-live readiness reviews.</p></div>
+				<div class="usecase"><h3>Defect Review Sessions</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Severity, priority and RCA discussions.</p></div>
+				<div class="usecase"><h3>Requirement Grooming Meetings</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Requirement reviews, questions and risk identification.</p></div>
+				<div class="usecase"><h3>Sprint Planning Support</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Effort estimation, dependencies and risk analysis.</p></div>
+				<div class="usecase"><h3>Retrospective Preparation</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Sprint summaries, defect trends and action items.</p></div>
+				<div class="usecase"><h3>Test Strategy Workshops</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Coverage discussions, risk analysis and testing approach reviews.</p></div>
+				<div class="usecase"><h3>QA Lead Productivity Assistant</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Status reports, team planning and metrics analysis.</p></div>
+			</div>
+
+			<div class="card" id="section-10">
+				<div class="section-title"><h2>5. Routines And Schedule Use Cases</h2><span>Recurring QA work that the team can reuse</span></div>
+				<div class="usecase"><h3>Daily Defect Triage Routine</h3><p><b>Recommended:</b> Claude Co-Work or Claude Code</p><p>Review new defects, group similar issues and prepare the team for the day’s priorities.</p></div>
+				<div class="usecase"><h3>Weekly Regression Routine</h3><p><b>Recommended:</b> Claude Code or Claude Projects</p><p>Repeat the same smoke, sanity and regression checks each week to keep the release candidate healthy.</p></div>
+				<div class="usecase"><h3>Release Readiness Schedule</h3><p><b>Recommended:</b> Claude Co-Work</p><p>Prepare recurring go-live notes, open risks and sign-off points before each release window.</p></div>
+				<div class="usecase"><h3>Nightly Test Health Check</h3><p><b>Recommended:</b> Claude Code</p><p>Review failed runs, unstable tests and environment issues on a repeating cadence.</p></div>
+				<div class="usecase"><h3>Weekly Test Maintenance Routine</h3><p><b>Recommended:</b> Claude Code</p><p>Track locator changes, framework cleanup and other maintenance items that recur during active development.</p></div>
+			</div>
+
+			<div class="card" id="section-11">
+				<div class="section-title"><h2>11. Project Structures</h2><span>Recommended framework blueprints and asset mapping</span></div>
+				<p>Recommended framework blueprints for managing context engines effectively within active project roots.</p>
+				<pre>project-root/
+├── docs/ai-context/         # Primary source of truth for Claude Desktop
+│   ├── architecture.md
+│   ├── coding-standards.md
+│   ├── business-rules.md
+│   ├── workflows.md
+│   ├── integrations.md
+│   └── troubleshooting.md
+├── .claude/
+│   ├── agents/              # Custom execution sub-agents
+│   ├── commands/            # Executable custom text command blocks
+│   ├── skills/              # Reusable operational team playbooks
+│   └── CLAUDE.md            # Highly concise, project-specific operational memory
+└── src/</pre>
+
+				<h3>GitHub Copilot to Claude Asset Translation Mapping</h3>
+				<table>
+					<tr><th>Purpose</th><th>GitHub Copilot Configuration</th><th>Claude Equivalent</th></tr>
+					<tr><td><b>Project instructions</b></td><td>Repository instructions</td><td>CLAUDE.md / .claude/rules</td></tr>
+					<tr><td><b>Reusable prompt blocks</b></td><td>Prompt files</td><td>Commands and skills</td></tr>
+					<tr><td><b>Reusable behaviors</b></td><td>Agent definitions</td><td>Skills with instructions and tools</td></tr>
+					<tr><td><b>External tool wiring</b></td><td>Extensions</td><td>MCP servers</td></tr>
+					<tr><td><b>Task orchestration</b></td><td>Inline workflow prompts</td><td>Plan mode and subagents</td></tr>
+				</table>
+			</div>
+
+			<div class="card" id="section-12">
+				<div class="section-title"><h2>7. QA Life-Cycle Workflows</h2><span>Hand off tasks across interfaces from requirements to release</span></div>
+				<p>Maximize your sprint velocity by strategically handing off tasks across interfaces as development moves from requirements to release.</p>
+				<div class="usecase">
+					<h3>Workflow A: New Feature Validation & Automation Lifecycle</h3>
+					<div class="workflow-step"><b>Phase 1: Requirement Analysis (Claude Web)</b><br>Paste a new feature specification into Web. Ask Claude to identify edge cases, data boundaries, and missing validation loops. Document your findings.</div>
+					<div class="workflow-step"><b>Phase 2: Test Orchestration (Claude Projects)</b><br>Move the validated features into your dedicated Release Project. Provide Claude with the historical manual test suites to generate updated Gherkin/Feature files mapping directly to your core standards.</div>
+					<div class="workflow-step"><b>Phase 3: Scripts & Page Objects (Claude Code / CLI)</b><br>Open the terminal within your framework repository. Direct Claude Code to automatically scan existing architecture, map page components, and build out complete, runnable automation scripts.</div>
+					<div class="workflow-step"><b>Phase 4: Sync & Polish (MCP)</b><br>Leverage MCP Jira connectors directly from your interface to map the newly generated automated scenarios back to the originating story id, keeping statuses aligned.</div>
+				</div>
+				<div class="usecase">
+					<h3>Workflow B: CI/CD Pipeline Defect Mitigation Lifecycle</h3>
+					<div class="workflow-step"><b>Phase 1: Log & Environment Analysis (Claude Desktop)</b><br>A nightly build fails in staging. Open Claude Desktop, grant file system access or upload raw trace-logs along with browser failure screenshots. Have Claude diagnose the structural failure.</div>
+					<div class="workflow-step"><b>Phase 2: Repository Root-Cause & Refactor (Claude Code / CLI)</b><br>With the error isolated, hand off the context to Claude Code in your local CLI. Instruct it to seek out the flaky wait state or damaged DOM selector and refactor files globally across the repository.</div>
+					<div class="workflow-step"><b>Phase 3: Run Validation and Commit (Claude Code / CLI)</b><br>Instruct Claude Code to execute the targeted suite locally in the terminal. Once tests pass consistently, prompt Claude to stage, commit, and spin up a pull request directly from the shell environment.</div>
+				</div>
+				<div class="usecase">
+					<h3>Workflow C: Mid-Sprint Scope Modification & Regression Alignment</h3>
+					<div class="workflow-step"><b>Phase 1: Scope Evaluation (Claude Web + MCP)</b><br>A critical change request arrives mid-sprint. Feed the altered requirement delta into Claude Web and use the Jira MCP tool to see which components are touched. Evaluate immediate delivery risk.</div>
+					<div class="workflow-step"><b>Phase 2: Automated Sweep (Claude Code / CLI)</b><br>Identify structural framework changes needed to cover the scope modifications. Direct Claude Code via terminal to locate affected custom variables and apply bulk modifications to parameter blocks concurrently.</div>
+					<div class="workflow-step"><b>Phase 3: Team Risk Alignment (Claude Co-Work)</b><br>Initiate an interactive session in Co-Work with the broader team. Review the updated coverage matrix, regression boundaries, and potential release side-effects collectively before kicking off signed runs.</div>
+				</div>
+			</div>
+
+			<div class="card" id="section-13">
+				<div class="section-title"><h2>10. First-Day Quick Start</h2><span>Practical checklist and common pitfalls</span></div>
+				<table>
+					<tr><th>Step</th><th>Action Item Checklist</th></tr>
+					<tr><td>1</td><td>Install Claude Code and open it in VS Code or Claude Desktop.</td></tr>
+					<tr><td>2</td><td>Sign in and complete required account setups, including GitHub device handshakes.</td></tr>
+					<tr><td>3</td><td>Create or open your assigned local isolated project folder.</td></tr>
+					<tr><td>4</td><td>Run initial project setup configurations and verify active runtime scoping inside that folder.</td></tr>
+					<tr><td>5</td><td>Create your personal local <code>settings.json</code> or <code>.claude</code> assets if required by the project.</td></tr>
+					<tr><td>6</td><td>Audit and check active MCP tools; immediately disable unneeded cross-project connectors.</td></tr>
+					<tr><td>7</td><td>Initiate an explicit small task, invoke <code>plan mode</code> to align target directories, and save history.</td></tr>
+				</table>
+				<div class="common-mistakes" style="margin-top:20px;">
+					<h3>Common Failures & Remediation Paths</h3>
+					<ul>
+						<li><b>Unrelated tasks in one long session:</b> Noise increases context pollution. <i>Fix:</i> Instantiate fresh operational chat threads or compact state properties regularly.</li>
+						<li><b>Vague requirements prompts:</b> Causes architectural wandering. <i>Fix:</i> Provide target files, schemas, assertion rules, and verification checklists on line 1.</li>
+						<li><b>Skipping plan mode on major transformations:</b> Induces loose code additions. <i>Fix:</i> Enforce structural alignment planning tasks prior to script execution.</li>
+						<li><b>Pasting massive raw terminal outputs:</b> Blinds attention windows. <i>Fix:</i> Apply local log grep filters or extract concise traceback frames prior to ingestion.</li>
+					</ul>
+				</div>
+				<div class="golden-box">
+					<h3>The QA Golden Rules</h3>
+					<ol>
+						<li>Keep each project strictly isolated in its own local folder.</li>
+						<li>Use local MCP configuration and avoid unnecessary global access pathways.</li>
+						<li>Plan first for non-trivial work and keep exactly one task target per prompt run.</li>
+						<li>Keep context focused by starting fresh when tasks shift.</li>
+						<li>Keep CLAUDE.md concise, clear, and focused solely on active framework properties.</li>
+						<li>Review suggested structural transformations carefully before accepting workspace edits.</li>
+					</ol>
+				</div>
+			</div>
+
+			<div class="card" id="section-14">
+				<div class="section-title"><h2>12. Security, Governance & Compliance Mandates</h2><span>Strict operational restrictions for sensitive data</span></div>
+				<div class="danger-box"><strong>Strict Operational Restriction:</strong> Under no conditions are team members permitted to transmit sensitive, proprietary, or un-scrubbed parameters to public cloud models.</div>
+				<p><b>Prohibited Structural Elements:</b></p>
+				<ul>
+					<li>Production API access tokens, keys, and authorization hooks.</li>
+					<li>Live customer database connectivity matrices and decryption secrets.</li>
+					<li>Personally Identifiable Information (PII) belonging to users or stakeholders.</li>
+					<li>Raw operational certificates, security assets, or encryption secrets.</li>
+				</ul>
+				<p><i>Corporate Enforcement:</i> All platform engineers and automation professionals remain wholly accountable for verifying and testing generated code structures prior to pushing to master build lines.</p>
+			</div>
+
+			<div class="card" id="section-15">
+				<div class="section-title"><h2>14. Learning Resources</h2><span>Curated links for deeper study</span></div>
+				<h3>Quick Reference And Resources</h3>
+				<div class="golden-box"><strong>Rule of thumb:</strong> Use Claude Web for understanding and planning, Claude Desktop for evidence-heavy analysis, Claude Code for implementation, and MCP when the task needs live system access.</div>
+				<div class="danger-box"><strong>Do not:</strong> Put broad project knowledge into personal files, mix unrelated tasks in one session, or modify files outside the active project folder.</div>
+				<h3>Claude Code / CLI</h3>
+				<ul>
+					<li><a href="https://docs.anthropic.com/en/docs/claude-code/cli-usage" target="_blank" rel="noreferrer">Official CLI Documentation</a></li>
+					<li><a href="https://support.claude.com/en/articles/14553517-claude-code-common-developer-use-cases" target="_blank" rel="noreferrer">Common Developer Workflows</a></li>
+					<li><a href="https://docs.anthropic.com/en/docs/claude-code/github-actions" target="_blank" rel="noreferrer">GitHub Actions Integration</a></li>
+					<li><a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noreferrer">Claude Code Best Practices</a></li>
+				</ul>
+
+				<h3>MCP</h3>
+				<ul>
+					<li><a href="https://docs.anthropic.com/en/docs/mcp" target="_blank" rel="noreferrer">MCP Overview</a></li>
+					<li><a href="https://docs.anthropic.com/en/docs/claude-code/mcp" target="_blank" rel="noreferrer">MCP Connectors</a></li>
+					<li><a href="https://modelcontextprotocol.io" target="_blank" rel="noreferrer">Model Context Protocol Specification</a></li>
+				</ul>
+
+				<h3>Claude Projects</h3>
+				<ul>
+					<li><a href="https://support.claude.com/en/articles/9517075-what-are-projects" target="_blank" rel="noreferrer">Projects Overview</a></li>
+					<li><a href="https://support.claude.com/en/articles/9519177-project-knowledge" target="_blank" rel="noreferrer">Project Knowledge and Instructions</a></li>
+				</ul>
+
+				<h3>Claude Desktop</h3>
+				<ul>
+					<li><a href="https://claude.ai/download" target="_blank" rel="noreferrer">Desktop App Documentation</a></li>
+					<li><a href="https://support.claude.com/en/articles/10065433-installing-claude-desktop" target="_blank" rel="noreferrer">Desktop + MCP Setup</a></li>
+				</ul>
+
+				<h3>Claude Web</h3>
+				<ul>
+					<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering" target="_blank" rel="noreferrer">Prompt Engineering Guide</a></li>
+					<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/context-windows" target="_blank" rel="noreferrer">Long Context Guide</a></li>
+				</ul>
+
+				<h3>VS Code Extension</h3>
+				<ul>
+					<li><a href="https://docs.anthropic.com/en/docs/claude-code/ide-integrations" target="_blank" rel="noreferrer">Extension Documentation</a></li>
+					<li><a href="https://marketplace.visualstudio.com/items?itemName=Anthropic.claude-code" target="_blank" rel="noreferrer">VS Code Setup Guide</a></li>
+				</ul>
+
+				<h3>Enterprise Adoption Resources</h3>
+				<ul>
+					<li><a href="https://docs.anthropic.com" target="_blank" rel="noreferrer">Anthropic Documentation Home</a></li>
+					<li><a href="https://support.claude.com" target="_blank" rel="noreferrer">Anthropic Learning Center</a></li>
+					<li><a href="https://www.anthropic.com/engineering" target="_blank" rel="noreferrer">Anthropic Engineering Blog</a></li>
+				</ul>
+			</div>
+		</section>
+	</div>
+</main>
+</body>
+</html>
